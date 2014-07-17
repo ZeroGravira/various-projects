@@ -1,0 +1,2 @@
+/*This will be a simulation of the television the game
+  will be played on.*/
