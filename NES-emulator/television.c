@@ -22,6 +22,8 @@ int main( int argc, char* argv[] ) {
 
 	/*display everything*/
 	gtk_widget_show_all( window );
+
+	/*set program to terminate when window closes*/
 	g_signal_connect( window, "destroy", G_CALLBACK( gtk_main_quit ), NULL );
 	gtk_main();
 
