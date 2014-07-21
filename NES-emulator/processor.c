@@ -69,7 +69,7 @@ void adc( char* accum, char* status, unsigned char arg ) {
 	*accum = sum % 0x0100;
 
 	/*set or clear the carry and overflow flags*/
-	if( sum / 0xFF ) {
+	if( sum / 0x0100 ) {
 		setStatus( status, STATUS_C );
 		setStatus( status, STATUS_V );
 	} else {
@@ -95,10 +95,10 @@ void and( char* accum, char* status, char arg ) {
 	checkSignStatus( status, *accum );
 }
 
-void asl( char* accum, char* status, char arg ) {
+void asl( char* accum, char* status ) {
 
 	/*if the leftmost bit is 1, carry out will be 1*/
-	if( *accum / 0x7F == 1 ) {
+	if( *accum / 0x80 != 1 ) {
 		setStatus( status, STATUS_C );
 	} else {
 		clearStatus( status, STATUS_C );
@@ -132,6 +132,42 @@ void displayAdcTest( char* accum, char* status, unsigned char arg ) {
 	printf( "\nadding %d to accumulator\n", arg );
 	adc( accum, status, arg );
 	printf( "accum = %d\n", (unsigned char)*accum );
+	displayStatus( *status );
+}
+
+void printBinary( char reg ) {
+	unsigned char mask = 0x80;
+	int i;
+	for( i = 0; i < 8; i++ ) {
+		if( ( mask & reg ) == 0 ) {
+			printf( "0" );
+		} else {
+			printf( "1" );
+		}
+		/*printf( "mask = %d\n", mask );*/
+		mask = mask >> 1;
+	}
+	printf( "\n" );
+}
+
+void displayAndTest( char* accum, char* status, unsigned char arg ) {
+	printf( "\naccumulator \"and\" test:\n" );
+	printBinary( *accum );
+	printBinary( arg );
+	printf( "--------\n" );
+	and( accum, status, arg );
+	printBinary( *accum );
+	printf( "\n" );
+	displayStatus( *status );
+}
+
+void displayAslTest( char* accum, char* status ) {
+	printf( "\naccumulator shift left test:\n" );
+	printBinary( *accum );
+	printf( "---------\n" );
+	asl( accum, status );
+	printBinary( *accum );
+	printf( "\n" );
 	displayStatus( *status );
 }
 
@@ -192,5 +228,18 @@ int main( int argc, char* argv[] ) {
 	displayAdcTest( &accum, &status, 132 );
 	displayAdcTest( &accum, &status, 170 );
 
+	/*test and*/
+	displayAndTest( &accum, &status, 0xFF );
+	displayAndTest( &accum, &status, 0x55 );
+	displayAndTest( &accum, &status, ~(0x5) );
+	displayAdcTest( &accum, &status, 0xFE );
+	displayAndTest( &accum, &status, 0x80 );
+	
+	/*test asl*/
+	displayAslTest( &accum, &status );
+	displayAdcTest( &accum, &status, 0x56 );
+	for( i = 0; i < 8; i++ ) {
+		displayAslTest( &accum, &status );
+	}
 	return 0;
 }
