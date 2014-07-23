@@ -1,13 +1,8 @@
+#include "processor.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STATUS_C (0)
-#define STATUS_Z (1)
-#define STATUS_I (2)
-#define STATUS_D (3)
-#define STATUS_B (4)
-#define STATUS_V (6)
-#define STATUS_S (7)
 
 /*
  * check a bit in the status register
@@ -113,6 +108,118 @@ void asl( char* accum, char* status ) {
 	checkSignStatus( status, *accum );
 }
 
+void bcc( unsigned short int* pc, char status, char arg ) {
+
+	/*if the carry bit clear, branch*/
+	if( !getStatus( status, STATUS_C ) ) {
+		*pc += arg;
+	}
+	
+}
+
+void bcs( unsigned short int* pc, char status, char arg ) {
+
+	/*if the carry bit is set, branch*/
+	if( getStatus( status, STATUS_C ) ) {
+		*pc += arg;
+	}
+}
+
+void beq( unsigned short int* pc, char status, char arg ) {
+
+	/*if the zero bit is set, branch*/
+	if( getStatus( status, STATUS_Z ) ) {
+		*pc += arg;
+	}
+}
+
+void bit( char accum, char* status, char arg ) {
+
+	checkZeroStatus( status, accum & arg );
+	if( ( arg & 0x80 ) == 0 ) {
+		clearStatus( status, STATUS_S );
+	} else {
+		setStatus( status, STATUS_S );
+	}
+
+	if( ( arg & 0x40 ) == 0 ) {
+		clearStatus( status, STATUS_V );
+	} else {
+		setStatus( status, STATUS_V );
+	}
+}
+
+void bmi( unsigned short int* pc, char status, char arg ) {
+		
+	/*if the zero bit is set, branch*/
+	if( getStatus( status, STATUS_S ) ) {
+		*pc += arg;
+	}
+}
+
+void bne( unsigned short int* pc, char status, char arg ) {
+
+	/*if the zero bit is clear, branch*/
+	if( !getStatus( status, STATUS_Z ) ) {
+		*pc += arg;
+	}
+}
+
+void bpl( unsigned short int* pc, char status, char arg ) {
+
+	/*if the sign bit is clear, branch*/
+	if( !getStatus( status, STATUS_S ) ) {
+		*pc += arg;
+	}
+}
+
+void brk( unsigned short int* pc, char status ) {
+
+}
+
+void bvc( unsigned short int* pc, char status, char arg ) {
+
+	/*if the overflow bit is clear, branch*/
+	if( !getStatus( status, STATUS_V ) ) {
+		*pc += arg;
+	}
+}
+
+void bvs( unsigned short int* pc, char status, char arg ) {
+
+	/*if the overflow bit is set, branch*/
+	if( getStatus( status, STATUS_V ) ) {
+		*pc += arg;
+	}
+}
+
+void clc( char* status ) {
+	clearStatus( status, STATUS_C );
+}
+
+void cld( char* status ) {
+	clearStatus( status, STATUS_D );
+}
+
+void cli( char* status ) {
+	clearStatus( status, STATUS_I );
+}
+
+void clv( char* status ) {
+	clearStatus( status, STATUS_V );
+}
+
+void cmp( char accum, char* status, char arg ) {
+	char diff = accum - arg;
+	checkZeroStatus( status, diff );
+	checkSignStatus( status, diff );
+	if( accum < arg ) {
+		setStatus( status, STATUS_C );
+	} else {
+		clearStatus( status, STATUS_C );
+	}
+}
+
 /*self-test functions*/
 
 void displayStatus( char status ) {
@@ -171,13 +278,33 @@ void displayAslTest( char* accum, char* status ) {
 	displayStatus( *status );
 }
 
+void displayBccTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch carry clear test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bcc( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBcsTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch carry set test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bcs( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
 /*
  * processor self-test
  */
 int main( int argc, char* argv[] ) {
 
 	char accum,/*xind, yind,*/ status/*, sp*/;
-	/*unsigned short int pc;*/
+	unsigned short int pc;
 
 	/*clear all registers*/
 	/*accum, xind, yind = 0;*/
@@ -241,5 +368,17 @@ int main( int argc, char* argv[] ) {
 	for( i = 0; i < 8; i++ ) {
 		displayAslTest( &accum, &status );
 	}
+
+	/*test bcc*/
+	pc = 200;
+	displayBccTest( &pc, status, 62 );
+	displayBccTest( &pc, status, -53 );
+	displayBcsTest( &pc, status, 17 );
+	displayBcsTest( &pc, status, -9 );
+	displayAdcTest( &accum, &status, 21 );
+	displayBccTest( &pc, status, 62 );
+	displayBccTest( &pc, status, -53 );
+	displayBcsTest( &pc, status, 17 );
+	displayBcsTest( &pc, status, -9 );
 	return 0;
 }
