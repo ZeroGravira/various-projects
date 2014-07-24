@@ -151,7 +151,7 @@ void bit( char accum, char* status, char arg ) {
 
 void bmi( unsigned short int* pc, char status, char arg ) {
 		
-	/*if the zero bit is set, branch*/
+	/*if the sign bit is set, branch*/
 	if( getStatus( status, STATUS_S ) ) {
 		*pc += arg;
 	}
@@ -298,6 +298,68 @@ void displayBcsTest( unsigned short int* pc ,char status, char arg ) {
 	printf( "\n" );
 }
 
+void displayBeqTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch equal test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	beq( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBneTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch not equal test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bne( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBplTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch on positive test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bpl( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBmiTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch on negative test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bmi( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBvcTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch on overflow clear test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bvc( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+void displayBvsTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "\n" );
+	printf( "branch on overflow set test %d:\n", arg );
+	displayStatus( status );
+	printf( "pc before branch: %d\n", *pc );
+	bvs( pc, status, arg );
+	printf( "pc after branch: %d\n", *pc );
+	printf( "\n" );
+}
+
+
+
 /*
  * processor self-test
  */
@@ -369,7 +431,7 @@ int main( int argc, char* argv[] ) {
 		displayAslTest( &accum, &status );
 	}
 
-	/*test bcc*/
+	/*test bcc and bcs*/
 	pc = 200;
 	displayBccTest( &pc, status, 62 );
 	displayBccTest( &pc, status, -53 );
@@ -380,5 +442,38 @@ int main( int argc, char* argv[] ) {
 	displayBccTest( &pc, status, -53 );
 	displayBcsTest( &pc, status, 17 );
 	displayBcsTest( &pc, status, -9 );
+
+	/*test beq and bne*/
+	displayBeqTest( &pc, status, 31 );
+	displayBeqTest( &pc, status, -17 );
+	displayBneTest( &pc, status, 47 );
+	displayBneTest( &pc, status, -37 );
+	displayAndTest( &accum, &status, 0 );
+	displayBeqTest( &pc, status, 31 );
+	displayBeqTest( &pc, status, -17 );
+	displayBneTest( &pc, status, 47 );
+	displayBneTest( &pc, status, -37 );
+
+	/*test bpl and bmi*/
+	displayBplTest( &pc, status, 11 );
+	displayBplTest( &pc, status, -7 );
+	displayBmiTest( &pc, status, 29 );
+	displayBmiTest( &pc, status, -61 );
+	displayAdcTest( &accum, &status, -12 );
+	displayBplTest( &pc, status, 11 );
+	displayBplTest( &pc, status, -7 );
+	displayBmiTest( &pc, status, 29 );
+	displayBmiTest( &pc, status, -61 );
+
+	/*test bvc and bvs*/
+	displayBvsTest( &pc, status, 71 );
+	displayBvsTest( &pc, status, -54 );
+	displayBvcTest( &pc, status, 23 );
+	displayBvcTest( &pc, status, -33 );
+	displayAdcTest( &accum, &status, -127 );
+	displayBvsTest( &pc, status, 71 );
+	displayBvsTest( &pc, status, -54 );
+	displayBvcTest( &pc, status, 23 );
+	displayBvcTest( &pc, status, -33 );
 	return 0;
 }
