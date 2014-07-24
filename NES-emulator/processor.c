@@ -219,3 +219,123 @@ void cmp( char accum, char* status, char arg ) {
 		clearStatus( status, STATUS_C );
 	}
 }
+
+void cpx( char x, char* status, char arg ) {
+	char diff = x - arg;
+	checkZeroStatus( status, diff );
+	checkSignStatus( status, diff );
+	if( x < arg ) {
+		setStatus( status, STATUS_C );
+	} else {
+		clearStatus( status, STATUS_C );
+	}
+}
+
+void cpy( char y, char* status, char arg ) {
+	char diff = y - arg;
+	checkZeroStatus( status, diff );
+	checkSignStatus( status, diff );
+	if( y < arg ) {
+		setStatus( status, STATUS_C );
+	} else {
+		clearStatus( status, STATUS_C );
+	}
+}
+
+void dec( char* memory, char* status ) {
+	*memory -= 1;
+	checkZeroStatus( status, *memory );
+	checkSignStatus( status, *memory );
+}
+
+void dex( char* x, char* status ) {
+	*x -= 1;
+	checkZeroStatus( status, *x );
+	checkSignStatus( status, *x );
+}
+
+void dey( char* y, char* status ) {
+	*y -= 1;
+	checkZeroStatus( status, *y );
+	checkSignStatus( status, *y );
+}
+
+void eor( char* accum, char* status, char arg ) {
+	*accum = *accum ^ arg;
+	checkZeroStatus( status, *accum );
+	checkSignStatus( status, *accum );
+}
+
+void inc( char* memory, char* status ) {
+	*memory += 1;
+	checkZeroStatus( status, *memory );
+	checkSignStatus( status, *memory );
+}
+
+void inx( char* x, char* status ) {
+	*x += 1;
+	checkZeroStatus( status, *x );
+	checkSignStatus( status, *x );
+}
+
+void iny( char* y, char* status ) {
+	*y += 1;
+	checkZeroStatus( status, *y );
+	checkSignStatus( status, *y );
+}
+
+void jmp( unsigned short int* pc, unsigned short int target ) {
+	*pc = target;
+}
+
+void jsr( unsigned short int* pc, unsigned short int target, char* sp, Stack* stack ) {
+
+	/*push the current pc onto the stack*/
+	stack->data[ (unsigned int)(*sp) ] = *pc;
+
+	/*update the stack pointer*/
+	*sp += 1;
+
+	/*copy the target address to the program counter*/
+	*pc = target;
+}
+
+void lda( char* accum, char* status, char arg ) {
+	*accum = arg;	
+	checkZeroStatus( status, *accum );
+	checkSignStatus( status, *accum );
+}
+
+void ldx( char* x, char* status, char arg ) {
+	*x = arg;
+	checkZeroStatus( status, *x );
+	checkSignStatus( status, *x );
+}
+
+void ldy( char* y, char* status, char arg ) {
+	*y = arg;
+	checkZeroStatus( status, *y );
+	checkSignStatus( status, *y );
+}
+
+void lsr( char* target, char* status ) {
+	if( (unsigned int)(*target) % 2 == 0 ) {
+		clearStatus( status, STATUS_C );
+	} else {
+		setStatus( status, STATUS_C );
+	}
+	clearStatus( status, STATUS_S );
+	checkZeroStatus( status, target );
+	*target = *target >> 1;
+}
+
+void nop( ) {
+	/*does nothing. At least for now, until I
+	  implement timing*/
+}
+
+void ora( char* accum, char* status, char arg ) {
+	*accum = *accum | arg;
+	checkZeroStatus( status, *accum );
+	checkSignStatus( status, *accum );
+}

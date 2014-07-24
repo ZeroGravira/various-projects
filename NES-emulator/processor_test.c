@@ -5,6 +5,7 @@
 
 /*self-test functions*/
 
+
 void displayStatus( char status ) {
 	printf( "SV BDIZC\n" );
 	int i;
@@ -141,7 +142,29 @@ void displayBvsTest( unsigned short int* pc ,char status, char arg ) {
 	printf( "\n" );
 }
 
+void displayClcTest( char* status ) {
+	printf( "status before clc:\n" );
+	displayStatus( *status );
+	clc( status );
+	printf( "status after clc:\n" );
+	displayStatus( *status );
+}
 
+void displayClvTest( char* status ) {
+	printf( "status before clv:\n" );
+	displayStatus( *status );
+	clv( status );
+	printf( "status after clv:\n" );
+	displayStatus( *status );
+}
+
+void displayCldTest( char* status ) {
+	printf( "status before cld:\n" );
+	displayStatus( *status );
+	cld( status );
+	printf( "status after cld:\n" );
+	displayStatus( *status );
+}
 
 /*
  * processor self-test
@@ -258,5 +281,9 @@ int main( int argc, char* argv[] ) {
 	displayBvsTest( &pc, status, -54 );
 	displayBvcTest( &pc, status, 23 );
 	displayBvcTest( &pc, status, -33 );
+
+	/*test status clear instructions*/
+	displayClcTest( &status );
+	displayClvTest( &status );
 	return 0;
 }
