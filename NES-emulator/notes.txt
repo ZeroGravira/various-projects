@@ -1,10 +1,8 @@
-According to nesdev.com's 6502 guide, the program counter
-is pushed onto the stack in big endian format. That is, the high bit is pushed onto the stack first, and then the low bit is pushed on afterwards. Likewise, the low bit is pulled first, and the high bit is pulled second.
+According to nesdev.com's 6502 guide, the program counter is pushed onto the stack in big endian format.
+That is, the high bit is pushed onto the stack first, and then the low bit is pushed on afterwards. Likewise, 
+the low bit is pulled first, and the high bit is pulled second.
 
-According to visual6502.org, the B flag of the status
-register is not actually a bit within the register,
-but is simply set on the stack when BRK and PHP are
-invoked, and cleared on the stack when IRQ and NMI
-are invoked. Likewise, the bit within the actual
+According to visual6502.org, the B flag of the status register is not actually a bit within the register, but is simply set 
+on the stack when BRK and PHP are invoked, and cleared on the stack when IRQ and NMI are invoked. Likewise, the bit within the actual
 register is unaffected when RTI and PLP are invoked.
 visual6502.org/wiki/index.php?title=6502_BRK_and_B_bit
