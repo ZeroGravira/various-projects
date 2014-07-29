@@ -11,6 +11,10 @@ typedef struct {
 	char data[256];
 } Stack;
 
+typedef struct {
+	char data[ 65536 ];
+} Memory;
+
 int getStatus( char status, int bit );
 
 void setStatus( char* status, int bit );
@@ -109,14 +113,18 @@ void bpl( unsigned short int* pc, char status, char arg );
 /*
  * Force an interrupt and set interrupt flag.
  * 
- * (PC + 2) toS
- * (ST) toS
+ * (PCH) toS
+ * (PCL) toS
+ * (ST)  toS
+ *
+ * (PCH) <= M[ 0xFFFE ]
+ * (PCL) <= M[ 0xFFFF ]
  *
  * N Z C I D V
  * _ _ _ 1 _ _
  *
  */
-void brk( unsigned short int* pc, char status, unsigned char sp, Stack* stack );
+void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory mem, Stack* stack );
 
 /*
  * Branch on overflow clear.
@@ -558,7 +566,7 @@ void txa( char x, char* status, char* accum );
  * / / _ _ _ _
  *
  */
-void txs( char x, char* status, unsigned char* sp );
+void txs( char x, char* status, char* sp );
 
 /*
  * Transfer index Y to accumulator
