@@ -8,10 +8,6 @@
 #define STATUS_S (7)
 
 typedef struct {
-	char data[256];
-} Stack;
-
-typedef struct {
 	char data[ 65536 ];
 } Memory;
 
@@ -124,7 +120,7 @@ void bpl( unsigned short int* pc, char status, char arg );
  * _ _ _ 1 _ _
  *
  */
-void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory mem, Stack* stack );
+void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory mem );
 
 /*
  * Branch on overflow clear.
@@ -312,7 +308,7 @@ void jmp( unsigned short int* pc, unsigned short int target );
  * _ _ _ _ _ _
  *
  */
-void jsr( unsigned short int* pc, unsigned short int target, unsigned char* sp, Stack* stack );
+void jsr( unsigned short int* pc, unsigned short int target, unsigned char* sp, Memory* mem );
 
 /*
  * Load value to accumulator
@@ -381,7 +377,7 @@ void ora( char* accum, char* status, char arg );
  * _ _ _ _ _ _
  *
  */
-void pha( char accum, unsigned char* sp, Stack* stack );
+void pha( char accum, unsigned char* sp, Memory* mem );
 
 /*
  * Push status register onto stack
@@ -392,7 +388,7 @@ void pha( char accum, unsigned char* sp, Stack* stack );
  * _ _ _ _ _ _
  *
  */
-void php( char status, unsigned char* sp, Stack* stack );
+void php( char status, unsigned char* sp, Memory* mem );
 
 /*
  * Pull accumulator from stack
@@ -403,7 +399,7 @@ void php( char status, unsigned char* sp, Stack* stack );
  * _ _ _ _ _ _
  *
  */
-void pla( char* accum, unsigned char* sp, const Stack* stack );
+void pla( char* accum, unsigned char* sp, const Memory* memory );
 
 /*
  * Pull status from stack
@@ -414,7 +410,7 @@ void pla( char* accum, unsigned char* sp, const Stack* stack );
  * from status 
  *
  */
-void plp( char* status, unsigned char* sp, const Stack* stack );
+void plp( char* status, unsigned char* sp, const Memory* mem );
 
 /*
  * Rotate one bit left (memory or accumulator)
@@ -444,7 +440,7 @@ void ror( char* target, char* status );
  * From Stack
  *
  */
-void rti( char* pc, unsigned char* sp, char* status, const Stack* stack );
+void rti( char* pc, unsigned char* sp, char* status, const Memory* mem );
 
 /*
  * Return from subroutine
@@ -456,7 +452,7 @@ void rti( char* pc, unsigned char* sp, char* status, const Stack* stack );
  * _ _ _ _ _ _
  *
  */
-void rts( char* pc, unsigned char* sp, const Stack* stack );
+void rts( char* pc, unsigned char* sp, const Memory* mem );
 
 /*
  * Subtract memory from accumulator with borrow
