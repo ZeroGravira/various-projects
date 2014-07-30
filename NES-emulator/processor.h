@@ -7,6 +7,8 @@
 #define STATUS_V (6)
 #define STATUS_S (7)
 
+#define STACK_OFFSET (0x100)
+
 typedef struct {
 	char data[ 65536 ];
 } Memory;
@@ -120,7 +122,7 @@ void bpl( unsigned short int* pc, char status, char arg );
  * _ _ _ 1 _ _
  *
  */
-void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory mem );
+void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory* mem );
 
 /*
  * Branch on overflow clear.
