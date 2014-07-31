@@ -166,6 +166,14 @@ void displayCldTest( char* status ) {
 	displayStatus( *status );
 }
 
+void displayCliTest( char* status ) {
+	printf( "status before cli:\n" );
+	displayStatus( *status );
+	cli( status );
+	printf( "status after cli:\n" );
+	displayStatus( *status );
+}
+
 void displayLdaTest( char* accum, char* status, char arg ) {
 	printf( "\ntesting load accumulator %d:\n", arg );
 	printf( "status register before load:\n" );
@@ -215,6 +223,17 @@ void displayBrkTest( unsigned short int* pc, char* status, unsigned char* sp, Me
 	printf( "memory at 0x0100: %X\n", (unsigned char)(mem->data[ 0x100 ]) );
 	printf( "memory at 0x0101: %X\n", (unsigned char)(mem->data[ 0x101 ]) );
 	printf( "memory at 0x0102: %X\n", (unsigned char)(mem->data[ 0x102 ]) );
+}
+
+void displayRtiTest( unsigned short int* pc, unsigned char* sp, char* status, const Memory* mem ) {
+	printf( "return-from-interrupt test\n" );
+	printf( "pc before rti: %X\n", *pc );
+	printf( "status register before rti:\n" );
+	displayStatus( *status );
+	rti( pc, sp, status, mem );
+	printf( "pc after rti: %X\n", *pc );
+	printf( "status register after rti:\n" );
+	displayStatus( *status );
 }
 
 /*
@@ -368,5 +387,11 @@ int main( int argc, char* argv[] ) {
 
 	/*test brk instruction*/
 	displayBrkTest( &pc, &status, &sp, &mem );
+
+	/*test cli instruction*/
+	displayCliTest( &status );
+	
+	/*test rti instruction*/
+	displayRtiTest( &pc, &sp, &status, &mem );
 	return 0;
 }
