@@ -2,12 +2,25 @@ According to nesdev.com's 6502 guide, the program counter is pushed onto the sta
 That is, the high bit is pushed onto the stack first, and then the low bit is pushed on afterwards. Likewise, 
 the low bit is pulled first, and the high bit is pulled second.
 
+
 Actually, in apparent contradiction to the above, according to Wikipedia the 6502 is little-endian. It gives no citation for
 this, but if it's true it would seem to contradict nesdev's description of how the program counter is pushed onto  and
 pulled from the stack. Nesdev also indicates that the PC is loaded from memory in the BRK instruction in big endian format.
 For now, I'm leaving it big endian.
 
+
 According to visual6502.org, the B flag of the status register is not actually a bit within the register, but is simply set 
 on the stack when BRK and PHP are invoked, and cleared on the stack when IRQ and NMI are invoked. Likewise, the bit within the actual
 register is unaffected when RTI and PLP are invoked.
 visual6502.org/wiki/index.php?title=6502_BRK_and_B_bit
+
+
+C--or at least the gcc compiler--will always sign extend a value when casting from a smaller data size to a larger data size.
+This is problematic in a program such as this where we're more concerned with preserving the binary values rather than what
+value they represent in two's complement. This requires careful type casting. For example:
+
+char x = 0xE3; /*in two's complement, this is -29*/
+
+short int y = x; /*gcc treats x as -29, so instead of 00E3, y becomes FFE3*/
+
+The thing to keep in mind is that unless it's an unsigned data type, it will be treated as a two's complement value.
