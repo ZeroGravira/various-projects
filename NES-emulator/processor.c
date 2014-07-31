@@ -173,8 +173,31 @@ void bpl( unsigned short int* pc, char status, char arg ) {
 	}
 }
 
-void brk( unsigned short int* pc, char status ) {
+void brk( unsigned short int* pc, char* status, unsigned char* sp, Memory* mem ) {
 
+	char mask;
+
+	/*increment program counter*/
+	*pc = *pc + 1;
+
+	/*Push high program counter onto stack*/
+	mem->data[ STACK_OFFSET + *sp ] = *pc / 0x0100;
+	*sp = *sp + 1;
+
+	/*Push low program counter onto stack*/
+	mem->data[ STACK_OFFSET + *sp ] = *pc % 0x0100;
+	*sp = *sp + 1;
+
+	/*push status register*/
+	mask = 1 << STATUS_B;
+	mem->data[ STACK_OFFSET + *sp ] = *status | mask;
+	*sp = *sp + 1;
+
+	/*set interrupt flag*/
+	setStatus( status, STATUS_I );
+
+	/*load the vector into the PC*/
+	*pc = (mem->data[0xFFFE] << 8) + mem->data[0xFFFF];
 }
 
 void bvc( unsigned short int* pc, char status, char arg ) {
@@ -288,10 +311,10 @@ void jmp( unsigned short int* pc, unsigned short int target ) {
 	*pc = target;
 }
 
-void jsr( unsigned short int* pc, unsigned short int target, char* sp, Stack* stack ) {
+void jsr( unsigned short int* pc, unsigned short int target, unsigned char* sp, Memory* mem ) {
 
 	/*push the current pc onto the stack*/
-	stack->data[ (unsigned int)(*sp) ] = *pc;
+	mem->data[ *sp + STACK_OFFSET ] = *pc;
 
 	/*update the stack pointer*/
 	*sp += 1;
@@ -325,7 +348,7 @@ void lsr( char* target, char* status ) {
 		setStatus( status, STATUS_C );
 	}
 	clearStatus( status, STATUS_S );
-	checkZeroStatus( status, target );
+	checkZeroStatus( status, *target );
 	*target = *target >> 1;
 }
 
@@ -338,4 +361,118 @@ void ora( char* accum, char* status, char arg ) {
 	*accum = *accum | arg;
 	checkZeroStatus( status, *accum );
 	checkSignStatus( status, *accum );
+}
+
+void pha( char accum, unsigned char* sp, Memory* mem ) {
+	mem->data[ *sp + STACK_OFFSET ] = accum;
+	*sp += 1;
+}
+
+void php( char status, unsigned char* sp, Memory* mem ) {
+	mem->data[ *sp + STACK_OFFSET ] = status;
+	*sp += 1;
+} 
+
+void pla( char* accum, unsigned char* sp, const Memory* mem ) {
+	*sp -= 1;
+	*accum = mem->data[ *sp + STACK_OFFSET ];
+}
+
+void plp( char* status, unsigned char* sp, const Memory* mem ) {
+	*sp -= 1;
+	*status = mem->data[ *sp + STACK_OFFSET ];
+}
+
+void rol( char* target, char* status ) {
+	int carryOut = (*target & 0x80);
+	*target = *target << 1;
+	if( getStatus( *status, STATUS_C ) ) {
+		*target = *target | 0x01;
+	} else {
+		*target = *target | 0x00;
+	}
+	if( carryOut == 0 ) {
+		clearStatus( status, STATUS_C );
+	} else {
+		setStatus( status, STATUS_C );
+	}
+	checkZeroStatus( status, STATUS_Z );
+	checkSignStatus( status, STATUS_S );
+}
+
+void ror( char* target, char* status ) {
+	int carryOut = (*target & 0x01);
+	*target = *target >> 1;
+	if( getStatus( *status, STATUS_C ) ) {
+		*target = *target | 0x80;
+	} else {
+		*target = *target | 0x00;
+	}
+	if( carryOut == 0 ) {
+		clearStatus( status, STATUS_C );
+	} else {
+		setStatus( status, STATUS_C );
+	}
+	checkZeroStatus( status, STATUS_Z );
+	checkSignStatus( status, STATUS_S );
+}
+
+void sec( char* status ) {
+	setStatus( status, STATUS_C );
+}
+
+void sed( char* status ) {
+	setStatus( status, STATUS_D );
+}
+
+void sei( char* status ) {
+	setStatus( status, STATUS_I );
+}
+
+void sta( char accum, char* memory ) {
+	*memory = accum;
+}
+
+void stx( char x, char* memory ) {
+	*memory = x;
+}
+
+void sty( char y, char* memory ) {
+	*memory = y;
+}
+
+void tax( char accum, char* status, char* x ) {
+	*x = accum;
+	checkZeroStatus( status, *x );
+	checkSignStatus( status, *x );
+}
+
+void tay( char accum, char* status, char* y ) {
+	*y = accum;
+	checkZeroStatus( status, *y );
+	checkSignStatus( status, *y );
+}
+
+void tsx( char sp, char* status, char* x ) {
+	*x = sp;
+	checkZeroStatus( status, *x );
+	checkSignStatus( status, *x );
+}
+
+void txa( char x, char* status, char* a ) {
+	*a = x;
+	checkZeroStatus( status, *a );
+	checkSignStatus( status, *a );
+}
+
+void txs( char x, char* status, char* sp ) {
+	*sp = x;
+	checkZeroStatus( status, *sp );
+	checkSignStatus( status, *sp );
+}
+
+void tya( char y, char* status, char* a ) {
+	*a = y;
+	checkZeroStatus( status, *a );
+	checkSignStatus( status, *a );
 }
