@@ -263,6 +263,28 @@ void displaySeiTest( char* status ) {
 	displayStatus( *status );
 }
 
+void displayIncTest( char* memory, char* status ) {
+	printf( "increment memory test\n" );
+	printf( "memory before inc: %d\n", *memory );
+	printf( "status register before inc:\n" );
+	displayStatus( *status );
+	inc( memory, status );
+	printf( "memory after inc: %d\n", *memory );
+	printf( "status register after inc:\n" );
+	displayStatus( *status );
+}
+
+void displayDecTest( char* memory, char* status ) {
+	printf( "decrement memory test\n" );
+	printf( "memory before inc: %d\n", *memory );
+	printf( "status register before inc:\n" );
+	displayStatus( *status );
+	dec( memory, status );
+	printf( "memory after inc: %d\n", *memory );
+	printf( "status register after inc:\n" );
+	displayStatus( *status );
+}
+
 /*
  * processor self-test
  */
@@ -425,5 +447,9 @@ int main( int argc, char* argv[] ) {
 	
 	/*test rti instruction*/
 	displayRtiTest( &pc, &sp, &status, &mem );
+
+	/*test increment and decrements*/
+	displayIncTest( mem.data + 0xFFFE, &status );
+	displayDecTest( mem.data + 0xFFFE, &status );
 	return 0;
 }
