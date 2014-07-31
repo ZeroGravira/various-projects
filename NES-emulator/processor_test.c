@@ -285,6 +285,28 @@ void displayDecTest( char* memory, char* status ) {
 	displayStatus( *status );
 }
 
+void displayInxTest( char* x, char* status ) {
+	printf( "increment index x test\n" );
+	printf( "x index before inx: %d\n", *x );
+	printf( "status register before inx:\n" );
+	displayStatus( *status );
+	inx( x, status );
+	printf( "x index after inx: %d\n", *x );
+	printf( "status register after inx:\n" );
+	displayStatus( *status );
+}
+
+void displayDexTest( char* x, char* status ) {
+	printf( "decrement index x test\n" );
+	printf( "x index before dex: %d\n", *x );
+	printf( "status register before dex:\n" );
+	displayStatus( *status );
+	dex( x, status );
+	printf( "x index after dex: %d\n", *x );
+	printf( "status register after dex:\n" );
+	displayStatus( *status );
+}
+
 /*
  * processor self-test
  */
@@ -451,5 +473,8 @@ int main( int argc, char* argv[] ) {
 	/*test increment and decrements*/
 	displayIncTest( mem.data + 0xFFFE, &status );
 	displayDecTest( mem.data + 0xFFFE, &status );
+	displayLdxTest( &x, &status, -1 );
+	displayInxTest( &x, &status );
+	displayDexTest( &x, &status );
 	return 0;
 }
