@@ -435,14 +435,15 @@ void ror( char* target, char* status );
 /*
  * Return from interrupt
  *
- * S  fromS
- * PC fromS
+ * S   fromS
+ * PCL fromS
+ * PCH fromS
  *
  * N Z C I D V
  * From Stack
  *
  */
-void rti( char* pc, unsigned char* sp, char* status, const Memory* mem );
+void rti( unsigned short* pc, unsigned char* sp, char* status, const Memory* mem );
 
 /*
  * Return from subroutine

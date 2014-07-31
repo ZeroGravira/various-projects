@@ -417,6 +417,17 @@ void ror( char* target, char* status ) {
 	checkSignStatus( status, STATUS_S );
 }
 
+void rti( unsigned short int* pc, unsigned char* sp, char* status, const Memory* mem ) {
+	unsigned char pcl, pch;
+	*sp = *sp - 1;
+	*status = 0xEF & mem->data[ STACK_OFFSET + * sp ];
+	*sp = *sp - 1;
+	pcl = mem->data[ STACK_OFFSET + *sp ];
+	*sp = *sp - 1;
+	pch = mem->data[ STACK_OFFSET + *sp ];
+	*pc = (pch << 8) + pcl;
+}
+
 void sec( char* status ) {
 	setStatus( status, STATUS_C );
 }
