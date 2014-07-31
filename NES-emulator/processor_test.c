@@ -166,19 +166,77 @@ void displayCldTest( char* status ) {
 	displayStatus( *status );
 }
 
+void displayLdaTest( char* accum, char* status, char arg ) {
+	printf( "\ntesting load accumulator %d:\n", arg );
+	printf( "status register before load:\n" );
+	displayStatus( *status );
+	printf( "accumulator before load: %d\n", *accum );
+	lda( accum, status, arg );
+	printf( "status register after load:\n" );
+	displayStatus( *status );
+	printf( "accumulator after load: %d\n\n", *accum );
+	
+}
+
+void displayLdxTest( char* x, char* status, char arg ) {
+	printf( "\ntesting load x index %d:\n", arg );
+	printf( "status register before load:\n" );
+	displayStatus( *status );
+	printf( "x index before load: %d\n", *x );
+	ldx( x, status, arg );
+	printf( "status register after load:\n" );
+	displayStatus( *status );
+	printf( "x index after load: %d\n\n", *x );
+	
+}
+
+void displayLdyTest( char* y, char* status, char arg ) {
+	printf( "\ntesting load y index %d:\n", arg );
+	printf( "status register before load:\n" );
+	displayStatus( *status );
+	printf( "y index before load: %d\n", *y );
+	ldy( y, status, arg );
+	printf( "status register after load:\n" );
+	displayStatus( *status );
+	printf( "y index after load: %d\n\n", *y );
+}
+
+void displayBrkTest( unsigned short int* pc, char* status, unsigned char* sp, Memory* mem ) {
+	printf( "\ntesting brk:\n" );
+	printf( "status register before break:\n" );
+	displayStatus( *status );
+	printf( "pc before break: %X\n", *pc );
+	printf( "memory at 0xFFFE: %X\n", mem->data[ 0xFFFE ] );
+	printf( "memory at 0xFFFF: %X\n", mem->data[ 0xFFFF ] );
+	brk( pc, status, sp, mem );
+	printf( "\nstatus register after break:\n" );
+	displayStatus( *status );
+	printf( "pc after break: %X\n", *pc );
+	printf( "memory at 0x0100: %X\n", (unsigned char)(mem->data[ 0x100 ]) );
+	printf( "memory at 0x0101: %X\n", (unsigned char)(mem->data[ 0x101 ]) );
+	printf( "memory at 0x0102: %X\n", (unsigned char)(mem->data[ 0x102 ]) );
+}
+
 /*
  * processor self-test
  */
 int main( int argc, char* argv[] ) {
 
-	char accum,/*xind, yind,*/ status/*, sp*/;
+	char accum, x, y, status;
+	unsigned char sp;
 	unsigned short int pc;
+	Memory mem;
+
+	int i;
 
 	/*clear all registers*/
-	/*accum, xind, yind = 0;*/
-	int i;
+	accum = 0;
+	x = 0;
+	y = 0;
 	status = 0;
-	/*sp = 0;*/
+	sp = 0;
+	mem.data[ 0xFFFE ] = 0x20;
+	mem.data[ 0xFFFF ] = 0x12;
 
 	/*set bit 5 of the status register*/
 	setStatus( &status, 5 );
@@ -238,7 +296,7 @@ int main( int argc, char* argv[] ) {
 	}
 
 	/*test bcc and bcs*/
-	pc = 200;
+	pc = 0xA198;
 	displayBccTest( &pc, status, 62 );
 	displayBccTest( &pc, status, -53 );
 	displayBcsTest( &pc, status, 17 );
@@ -285,5 +343,30 @@ int main( int argc, char* argv[] ) {
 	/*test status clear instructions*/
 	displayClcTest( &status );
 	displayClvTest( &status );
+
+	/*test load accumulator instruction*/
+	displayLdaTest( &accum, &status,  97 );
+	displayLdaTest( &accum, &status,  -1 );
+	displayLdaTest( &accum, &status,   0 );
+	displayLdaTest( &accum, &status, 127 );
+	displayLdaTest( &accum, &status, -128 );
+
+	
+	/*test load index x instruction*/
+	displayLdxTest( &x, &status,  97 );
+	displayLdxTest( &x, &status,  -1 );
+	displayLdxTest( &x, &status,   0 );
+	displayLdxTest( &x, &status, 127 );
+	displayLdxTest( &x, &status, -128 );
+
+	/*test load index y instruction*/
+	displayLdyTest( &y, &status,   97 );
+	displayLdyTest( &y, &status,   -1 );
+	displayLdyTest( &y, &status,    0 );
+	displayLdyTest( &y, &status,  127 );
+	displayLdyTest( &y, &status, -128 );
+
+	/*test brk instruction*/
+	displayBrkTest( &pc, &status, &sp, &mem );
 	return 0;
 }
