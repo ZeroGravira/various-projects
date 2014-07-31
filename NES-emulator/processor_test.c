@@ -236,6 +236,33 @@ void displayRtiTest( unsigned short int* pc, unsigned char* sp, char* status, co
 	displayStatus( *status );
 }
 
+void displaySecTest( char* status ) {
+	printf( "set carry flag test\n" );
+	printf( "status register before sec:\n" );
+	displayStatus( *status );
+	sec( status );
+	printf( "status register after sec:\n" );
+	displayStatus( *status );
+}
+
+void displaySedTest( char* status ) {
+	printf( "set decimal flag test\n" );
+	printf( "status register before sec:\n" );
+	displayStatus( *status );
+	sed( status );
+	printf( "status register after sec:\n" );
+	displayStatus( *status );
+}
+
+void displaySeiTest( char* status ) {
+	printf( "set interrupt flag test\n" );
+	printf( "status register before sec:\n" );
+	displayStatus( *status );
+	sei( status );
+	printf( "status register after sec:\n" );
+	displayStatus( *status );
+}
+
 /*
  * processor self-test
  */
@@ -390,6 +417,11 @@ int main( int argc, char* argv[] ) {
 
 	/*test cli instruction*/
 	displayCliTest( &status );
+
+	/*test set flag instructions*/
+	displaySecTest( &status );
+	displaySedTest( &status );
+	displaySeiTest( &status );
 	
 	/*test rti instruction*/
 	displayRtiTest( &pc, &sp, &status, &mem );
