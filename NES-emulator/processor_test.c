@@ -383,6 +383,30 @@ void displaySbcTest( char* accum, char* status, char arg ) {
 	
 }
 
+void displayOraTest( char* accum, char* status, unsigned char arg ) {
+	printf( "=======================================");
+	printf( "\naccumulator \"or\" test:\n" );
+	printBinary( *accum );
+	printBinary( arg );
+	printf( "--------\n" );
+	ora( accum, status, arg );
+	printBinary( *accum );
+	printf( "\n" );
+	displayStatus( *status );
+}
+
+void displayEorTest( char* accum, char* status, unsigned char arg ) {
+	printf( "=======================================");
+	printf( "\naccumulator \"xor\" test:\n" );
+	printBinary( *accum );
+	printBinary( arg );
+	printf( "--------\n" );
+	eor( accum, status, arg );
+	printBinary( *accum );
+	printf( "\n" );
+	displayStatus( *status );
+}
+
 /*
  * processor self-test
  */
@@ -568,5 +592,15 @@ int main( int argc, char* argv[] ) {
 	displaySbcTest( &accum, &status, -1 ); 
 	displaySbcTest( &accum, &status, -1 ); 
 	displaySbcTest( &accum, &status, -128 ); 
+
+	/*test logical OR operation*/
+	displayOraTest( &accum, &status, 0xFF ); 
+	displayLdaTest( &accum, &status, 0 );
+	displayOraTest( &accum, &status, 0 ); 
+	displayLdaTest( &accum, &status, 0xFF );
+	displayOraTest( &accum, &status, 0xB7 ); 
+	displayLdaTest( &accum, &status, 0 );
+	displayOraTest( &accum, &status, 0xB7 ); 
+	displayOraTest( &accum, &status, 0x08 ); 
 	return 0;
 }
