@@ -20,9 +20,11 @@ void displayStatus( char status ) {
 }
 
 void displayAdcTest( char* accum, char* status, unsigned char arg ) {
+	printf( "=======================================");
 	printf( "\nadding %d to accumulator\n", arg );
+	printf( "accum before = %d\n", (unsigned char)*accum );
 	adc( accum, status, arg );
-	printf( "accum = %d\n", (unsigned char)*accum );
+	printf( "accum after = %d\n", (unsigned char)*accum );
 	displayStatus( *status );
 }
 
@@ -42,6 +44,7 @@ void printBinary( char reg ) {
 }
 
 void displayAndTest( char* accum, char* status, unsigned char arg ) {
+	printf( "=======================================");
 	printf( "\naccumulator \"and\" test:\n" );
 	printBinary( *accum );
 	printBinary( arg );
@@ -53,6 +56,7 @@ void displayAndTest( char* accum, char* status, unsigned char arg ) {
 }
 
 void displayAslTest( char* accum, char* status ) {
+	printf( "=======================================");
 	printf( "\naccumulator shift left test:\n" );
 	printBinary( *accum );
 	printf( "---------\n" );
@@ -63,6 +67,7 @@ void displayAslTest( char* accum, char* status ) {
 }
 
 void displayBccTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch carry clear test %d:\n", arg );
 	displayStatus( status );
@@ -73,6 +78,7 @@ void displayBccTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBcsTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch carry set test %d:\n", arg );
 	displayStatus( status );
@@ -83,6 +89,7 @@ void displayBcsTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBeqTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch equal test %d:\n", arg );
 	displayStatus( status );
@@ -93,6 +100,7 @@ void displayBeqTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBneTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch not equal test %d:\n", arg );
 	displayStatus( status );
@@ -103,6 +111,7 @@ void displayBneTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBplTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch on positive test %d:\n", arg );
 	displayStatus( status );
@@ -113,6 +122,7 @@ void displayBplTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBmiTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch on negative test %d:\n", arg );
 	displayStatus( status );
@@ -123,6 +133,7 @@ void displayBmiTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBvcTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch on overflow clear test %d:\n", arg );
 	displayStatus( status );
@@ -133,6 +144,7 @@ void displayBvcTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayBvsTest( unsigned short int* pc ,char status, char arg ) {
+	printf( "=======================================");
 	printf( "\n" );
 	printf( "branch on overflow set test %d:\n", arg );
 	displayStatus( status );
@@ -143,7 +155,8 @@ void displayBvsTest( unsigned short int* pc ,char status, char arg ) {
 }
 
 void displayClcTest( char* status ) {
-	printf( "status before clc:\n" );
+	printf( "=======================================");
+	printf( "\nstatus before clc:\n" );
 	displayStatus( *status );
 	clc( status );
 	printf( "status after clc:\n" );
@@ -151,7 +164,8 @@ void displayClcTest( char* status ) {
 }
 
 void displayClvTest( char* status ) {
-	printf( "status before clv:\n" );
+	printf( "=======================================");
+	printf( "\nstatus before clv:\n" );
 	displayStatus( *status );
 	clv( status );
 	printf( "status after clv:\n" );
@@ -159,7 +173,8 @@ void displayClvTest( char* status ) {
 }
 
 void displayCldTest( char* status ) {
-	printf( "status before cld:\n" );
+	printf( "=======================================");
+	printf( "\nstatus before cld:\n" );
 	displayStatus( *status );
 	cld( status );
 	printf( "status after cld:\n" );
@@ -167,7 +182,8 @@ void displayCldTest( char* status ) {
 }
 
 void displayCliTest( char* status ) {
-	printf( "status before cli:\n" );
+	printf( "=======================================");
+	printf( "\nstatus before cli:\n" );
 	displayStatus( *status );
 	cli( status );
 	printf( "status after cli:\n" );
@@ -175,41 +191,44 @@ void displayCliTest( char* status ) {
 }
 
 void displayLdaTest( char* accum, char* status, char arg ) {
+	printf( "=======================================");
 	printf( "\ntesting load accumulator %d:\n", arg );
+	printf( "\naccumulator before load: %d\n", *accum );
 	printf( "status register before load:\n" );
 	displayStatus( *status );
-	printf( "accumulator before load: %d\n", *accum );
 	lda( accum, status, arg );
+	printf( "accumulator after load: %d\n\n", *accum );
 	printf( "status register after load:\n" );
 	displayStatus( *status );
-	printf( "accumulator after load: %d\n\n", *accum );
-	
 }
 
 void displayLdxTest( char* x, char* status, char arg ) {
+	printf( "=======================================");
 	printf( "\ntesting load x index %d:\n", arg );
+	printf( "\nx index before load: %d\n", *x );
 	printf( "status register before load:\n" );
 	displayStatus( *status );
-	printf( "x index before load: %d\n", *x );
 	ldx( x, status, arg );
+	printf( "x index after load: %d\n\n", *x );
 	printf( "status register after load:\n" );
 	displayStatus( *status );
-	printf( "x index after load: %d\n\n", *x );
 	
 }
 
 void displayLdyTest( char* y, char* status, char arg ) {
+	printf( "=======================================");
 	printf( "\ntesting load y index %d:\n", arg );
+	printf( "\ny index before load: %d\n", *y );
 	printf( "status register before load:\n" );
 	displayStatus( *status );
-	printf( "y index before load: %d\n", *y );
 	ldy( y, status, arg );
+	printf( "y index after load: %d\n\n", *y );
 	printf( "status register after load:\n" );
 	displayStatus( *status );
-	printf( "y index after load: %d\n\n", *y );
 }
 
 void displayBrkTest( unsigned short int* pc, char* status, unsigned char* sp, Memory* mem ) {
+	printf( "=======================================");
 	printf( "\ntesting brk:\n" );
 	printf( "status register before break:\n" );
 	displayStatus( *status );
@@ -226,7 +245,8 @@ void displayBrkTest( unsigned short int* pc, char* status, unsigned char* sp, Me
 }
 
 void displayRtiTest( unsigned short int* pc, unsigned char* sp, char* status, const Memory* mem ) {
-	printf( "return-from-interrupt test\n" );
+	printf( "=======================================");
+	printf( "\nreturn-from-interrupt test\n" );
 	printf( "pc before rti: %X\n", *pc );
 	printf( "status register before rti:\n" );
 	displayStatus( *status );
@@ -237,7 +257,8 @@ void displayRtiTest( unsigned short int* pc, unsigned char* sp, char* status, co
 }
 
 void displaySecTest( char* status ) {
-	printf( "set carry flag test\n" );
+	printf( "=======================================");
+	printf( "\nset carry flag test\n" );
 	printf( "status register before sec:\n" );
 	displayStatus( *status );
 	sec( status );
@@ -246,7 +267,8 @@ void displaySecTest( char* status ) {
 }
 
 void displaySedTest( char* status ) {
-	printf( "set decimal flag test\n" );
+	printf( "=======================================");
+	printf( "\nset decimal flag test\n" );
 	printf( "status register before sec:\n" );
 	displayStatus( *status );
 	sed( status );
@@ -255,7 +277,8 @@ void displaySedTest( char* status ) {
 }
 
 void displaySeiTest( char* status ) {
-	printf( "set interrupt flag test\n" );
+	printf( "=======================================");
+	printf( "\nset interrupt flag test\n" );
 	printf( "status register before sec:\n" );
 	displayStatus( *status );
 	sei( status );
@@ -264,7 +287,8 @@ void displaySeiTest( char* status ) {
 }
 
 void displayIncTest( char* memory, char* status ) {
-	printf( "increment memory test\n" );
+	printf( "=======================================");
+	printf( "\nincrement memory test\n" );
 	printf( "memory before inc: %d\n", *memory );
 	printf( "status register before inc:\n" );
 	displayStatus( *status );
@@ -275,7 +299,8 @@ void displayIncTest( char* memory, char* status ) {
 }
 
 void displayDecTest( char* memory, char* status ) {
-	printf( "decrement memory test\n" );
+	printf( "=======================================");
+	printf( "\ndecrement memory test\n" );
 	printf( "memory before inc: %d\n", *memory );
 	printf( "status register before inc:\n" );
 	displayStatus( *status );
@@ -286,7 +311,8 @@ void displayDecTest( char* memory, char* status ) {
 }
 
 void displayInxTest( char* x, char* status ) {
-	printf( "increment index x test\n" );
+	printf( "=======================================");
+	printf( "\nincrement index x test\n" );
 	printf( "x index before inx: %d\n", *x );
 	printf( "status register before inx:\n" );
 	displayStatus( *status );
@@ -297,7 +323,8 @@ void displayInxTest( char* x, char* status ) {
 }
 
 void displayDexTest( char* x, char* status ) {
-	printf( "decrement index x test\n" );
+	printf( "=======================================");
+	printf( "\ndecrement index x test\n" );
 	printf( "x index before dex: %d\n", *x );
 	printf( "status register before dex:\n" );
 	displayStatus( *status );
@@ -305,6 +332,55 @@ void displayDexTest( char* x, char* status ) {
 	printf( "x index after dex: %d\n", *x );
 	printf( "status register after dex:\n" );
 	displayStatus( *status );
+}
+
+void displayInyTest( char* y, char* status ) {
+	printf( "=======================================");
+	printf( "\nincrement index y test\n" );
+	printf( "y index before iny: %d\n", *y );
+	printf( "status register before iny:\n" );
+	displayStatus( *status );
+	iny( y, status );
+	printf( "y index after iny: %d\n", *y );
+	printf( "status register after iny:\n" );
+	displayStatus( *status );
+}
+
+void displayDeyTest( char* y, char* status ) {
+	printf( "=======================================");
+	printf( "\ndecrement index y test\n" );
+	printf( "y index before dey: %d\n", *y );
+	printf( "status register before dey:\n" );
+	displayStatus( *status );
+	dex( y, status );
+	printf( "y index after dey: %d\n", *y );
+	printf( "status register after dey:\n" );
+	displayStatus( *status );
+}
+
+void displayStaTest( char accum, char* memory ) {
+	printf( "=======================================\n");
+	*memory = accum;
+}
+
+void displayStxTest( char x, char* memory ) {
+	printf( "=======================================\n");
+	*memory = x;
+}
+
+void displayStyTest( char y, char*memory ) {
+	printf( "=======================================\n");
+	*memory = y;
+}
+
+void displaySbcTest( char* accum, char* status, char arg ) {
+	printf( "=======================================");
+	printf( "\nsubtracting %d from accumulator\n", arg );
+	printf( "accum before = %d\n", (unsigned char)*accum );
+	sbc( accum, status, arg );
+	printf( "accum after = %d\n", (unsigned char)*accum );
+	displayStatus( *status );
+	
 }
 
 /*
@@ -377,6 +453,8 @@ int main( int argc, char* argv[] ) {
 	displayAndTest( &accum, &status, ~(0x5) );
 	displayAdcTest( &accum, &status, 0xFE );
 	displayAndTest( &accum, &status, 0x80 );
+	displayAndTest( &accum, &status, 0x0 );
+	displayAdcTest( &accum, &status, 0x80 );
 	
 	/*test asl*/
 	displayAslTest( &accum, &status );
@@ -476,5 +554,8 @@ int main( int argc, char* argv[] ) {
 	displayLdxTest( &x, &status, -1 );
 	displayInxTest( &x, &status );
 	displayDexTest( &x, &status );
+	displayLdyTest( &y, &status, -13 );
+	displayInyTest( &y, &status );
+	displayDeyTest( &y, &status );
 	return 0;
 }
