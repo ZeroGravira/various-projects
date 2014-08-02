@@ -61,13 +61,6 @@ void adc( char* accum, char* status, unsigned char arg ) {
 	unsigned short int sum;
 	
 	sum = (unsigned char)(*accum) + arg + getStatus( *status, STATUS_C );
-	/*
-	printf( "AC = %X\n", *accum );
-	printf( "arg = %X\n", arg );
-	printf( "sum = %X\n", sum );
-	printf( "(AC ^ arg) & 0x80: %d\n", (*accum ^ arg) & 0x80 );
-	printf( "(AC ^ sum) & 0x80: %d\n", (*accum ^ sum) & 0x80 );
-	*/
 	if( !((*accum ^ arg) & 0x80) && ((*accum ^ sum) & 0x80) ) {
 		setStatus( status, STATUS_V );
 	} else {
@@ -439,18 +432,31 @@ void rti( unsigned short int* pc, unsigned char* sp, char* status, const Memory*
 }
 
 void sbc( char* accum, char* status, char arg ) {
-	/*
-	char result = *accum - arg;
-	if( getStatus( status, STATUS_C ) ) {
-		result -= 1;
+	unsigned short int diff = *accum - arg;
+	if( getStatus( *status, STATUS_C ) ) {
+		diff -= 1;
 	}
-	if( result < 0 ) { 
-		setStatus( status, STATUS_S );
+
+	/*set or clear overflow flag*/
+	if( ((*accum ^ diff) & 0x80) && ((*accum ^ arg) & 0x80) ) {
+		setStatus( status, STATUS_V );
+	} else {
+		clearStatus( status, STATUS_V );
 	}
-	if( result == 0 ) {
-		setStatus( status, STATUS_Z );
+
+	/*set or clear carry flag*/
+	if( diff / 0x0100 ) {
+		setStatus( status, STATUS_C );
+	} else {
+		clearStatus( status, STATUS_C );
 	}
-	*/
+	*accum = diff % 0x0100;
+
+	/*set or clear zero flag*/
+	checkZeroStatus( status, *accum );
+
+	/*set or clear sign flag*/
+	checkSignStatus( status, *accum );
 }
 
 void sec( char* status ) {
