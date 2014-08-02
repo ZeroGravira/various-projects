@@ -61,16 +61,26 @@ void adc( char* accum, char* status, unsigned char arg ) {
 	unsigned short int sum;
 	
 	sum = (unsigned char)(*accum) + arg + getStatus( *status, STATUS_C );
-	*accum = sum % 0x0100;
+	/*
+	printf( "AC = %X\n", *accum );
+	printf( "arg = %X\n", arg );
+	printf( "sum = %X\n", sum );
+	printf( "(AC ^ arg) & 0x80: %d\n", (*accum ^ arg) & 0x80 );
+	printf( "(AC ^ sum) & 0x80: %d\n", (*accum ^ sum) & 0x80 );
+	*/
+	if( !((*accum ^ arg) & 0x80) && ((*accum ^ sum) & 0x80) ) {
+		setStatus( status, STATUS_V );
+	} else {
+		clearStatus( status, STATUS_V );
+	}
 
 	/*set or clear the carry and overflow flags*/
 	if( sum / 0x0100 ) {
 		setStatus( status, STATUS_C );
-		setStatus( status, STATUS_V );
 	} else {
 		clearStatus( status, STATUS_C );
-		clearStatus( status, STATUS_V );
 	}
+	*accum = sum % 0x0100;
 
 	/*set or clear the zero flag*/
 	checkZeroStatus( status, *accum );
@@ -426,6 +436,21 @@ void rti( unsigned short int* pc, unsigned char* sp, char* status, const Memory*
 	*sp = *sp - 1;
 	pch = mem->data[ STACK_OFFSET + *sp ];
 	*pc = (pch << 8) + pcl;
+}
+
+void sbc( char* accum, char* status, char arg ) {
+	/*
+	char result = *accum - arg;
+	if( getStatus( status, STATUS_C ) ) {
+		result -= 1;
+	}
+	if( result < 0 ) { 
+		setStatus( status, STATUS_S );
+	}
+	if( result == 0 ) {
+		setStatus( status, STATUS_Z );
+	}
+	*/
 }
 
 void sec( char* status ) {
