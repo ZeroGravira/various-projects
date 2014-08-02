@@ -602,5 +602,13 @@ int main( int argc, char* argv[] ) {
 	displayLdaTest( &accum, &status, 0 );
 	displayOraTest( &accum, &status, 0xB7 ); 
 	displayOraTest( &accum, &status, 0x08 ); 
+
+	/*test logical XOR operation*/
+	displayEorTest( &accum, &status, 0xFF ); 
+	displayEorTest( &accum, &status, 0xFF ); 
+	displayEorTest( &accum, &status, ~(0x40) ); 
+	displayEorTest( &accum, &status, 0x55 ); 
+	displayEorTest( &accum, &status, 0x33 ); 
+	displayEorTest( &accum, &status, 0xCC ); 
 	return 0;
 }
