@@ -21,10 +21,10 @@ void displayStatus( char status ) {
 
 void displayAdcTest( char* accum, char* status, unsigned char arg ) {
 	printf( "=======================================");
-	printf( "\nadding %d to accumulator\n", arg );
-	printf( "accum before = %d\n", (unsigned char)*accum );
+	printf( "\nadding %d to accumulator\n", (char)arg );
+	printf( "accum before = %d (%d)\n", *accum, (unsigned char)(*accum) );
 	adc( accum, status, arg );
-	printf( "accum after = %d\n", (unsigned char)*accum );
+	printf( "accum after = %d (%d)\n", *accum, (unsigned char)(*accum) );
 	displayStatus( *status );
 }
 
@@ -59,7 +59,7 @@ void displayAslTest( char* accum, char* status ) {
 	printf( "=======================================");
 	printf( "\naccumulator shift left test:\n" );
 	printBinary( *accum );
-	printf( "---------\n" );
+	printf( "--------\n" );
 	asl( accum, status );
 	printBinary( *accum );
 	printf( "\n" );
@@ -375,10 +375,10 @@ void displayStyTest( char y, char*memory ) {
 
 void displaySbcTest( char* accum, char* status, char arg ) {
 	printf( "=======================================");
-	printf( "\nsubtracting %d from accumulator\n", arg );
-	printf( "accum before = %d\n", (unsigned char)*accum );
+	printf( "\nsubtracting %d (%d) from accumulator\n", arg, (unsigned char)(arg) );
+	printf( "accum before = %d (%d)\n", *accum, (unsigned char)(*accum) );
 	sbc( accum, status, arg );
-	printf( "accum after = %d\n", (unsigned char)*accum );
+	printf( "accum after = %d (%d)\n", *accum, (unsigned char)(*accum) );
 	displayStatus( *status );
 	
 }
@@ -557,5 +557,16 @@ int main( int argc, char* argv[] ) {
 	displayLdyTest( &y, &status, -13 );
 	displayInyTest( &y, &status );
 	displayDeyTest( &y, &status );
+
+	/*test subtract from accumulator*/
+	displayLdaTest( &accum, &status, 50 );
+	displaySbcTest( &accum, &status,  8 ); 
+	displaySbcTest( &accum, &status, 25 ); 
+	displaySbcTest( &accum, &status, 30 ); 
+	displaySbcTest( &accum, &status, 116 ); 
+	displaySbcTest( &accum, &status, -1 ); 
+	displaySbcTest( &accum, &status, -1 ); 
+	displaySbcTest( &accum, &status, -1 ); 
+	displaySbcTest( &accum, &status, -128 ); 
 	return 0;
 }
