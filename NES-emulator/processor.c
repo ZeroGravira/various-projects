@@ -93,7 +93,7 @@ void and( char* accum, char* status, char arg ) {
 void asl( char* accum, char* status ) {
 
 	/*if the leftmost bit is 1, carry out will be 1*/
-	if( *accum / 0x80 != 1 ) {
+	if( (unsigned char)(*accum) / 0x80 == 1 ) {
 		setStatus( status, STATUS_C );
 	} else {
 		clearStatus( status, STATUS_C );
