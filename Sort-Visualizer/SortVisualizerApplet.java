@@ -32,11 +32,11 @@ public class SortVisualizerApplet extends Applet implements Runnable {
 			j++;
 			for( int i = 0; i < n-j; i++ ) {
 				delaySort();
-				updateVisualizer( array, i, j );
+				updateVisualizer( array, i, n-j );
 				if( array.get(i) > array.get(i+1) ) {
-					delaySort();
 					Collections.swap( array, i, i+1 );
-					updateVisualizer( array, i, j );
+					/*delaySort();
+					updateVisualizer( array, i, j );*/
 					swapped = true;
 				}
 			}
