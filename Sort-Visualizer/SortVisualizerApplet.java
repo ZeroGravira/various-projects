@@ -8,11 +8,40 @@ public class SortVisualizerApplet extends Applet implements Runnable {
 
 	public static final int IMG_WIDTH = 240;
 	public static final int IMG_HEIGHT = 320;
+	public static final int DELAY = 50;
 
 	private BufferedImage image;
 	private Graphics2D g2d;
 	private Thread mainloop;
 
+	/*sleep the thread for a few miliseconds or so*/
+	private void delaySort() {
+		try {
+			Thread.sleep( DELAY );
+		} catch( Exception e ) {
+			System.err.println( "error!" );
+		}
+	}
+
+	private void bubbleSort( ArrayList<Integer> array ) {
+		boolean swapped = true;
+		int j = 0;
+		int n = array.size();
+		while( swapped ) {
+			swapped = false;
+			j++;
+			for( int i = 0; i < n-j; i++ ) {
+				delaySort();
+				updateVisualizer( array, i, j );
+				if( array.get(i) > array.get(i+1) ) {
+					delaySort();
+					Collections.swap( array, i, i+1 );
+					updateVisualizer( array, i, j );
+					swapped = true;
+				}
+			}
+		}
+	}
 
 	@Override
 	public void init() {
@@ -52,6 +81,8 @@ public class SortVisualizerApplet extends Applet implements Runnable {
 		}
 		Collections.shuffle( array );
 
+		bubbleSort( array );
+		/*
 		updateVisualizer( array, 1, 2 );
 		repaint();
 		try {
@@ -70,7 +101,7 @@ public class SortVisualizerApplet extends Applet implements Runnable {
 			Thread.sleep( 2000 );
 		} catch( Exception e ) {
 			System.err.println( "error!" );
-		}
+		}*/
 	}
 
 	public void updateVisualizer( ArrayList< Integer > array, int index1, int index2 ) {
